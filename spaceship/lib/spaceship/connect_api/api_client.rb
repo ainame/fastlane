@@ -36,10 +36,6 @@ module Spaceship
               open_timeout:  (ENV["SPACESHIP_TIMEOUT"] || 300).to_i
             }
           }
-          retry_options = {
-            max: 5,
-            retry_statuses: [429, 500, 504],
-          }
           @token = token
           @current_team_id = current_team_id
 
@@ -49,7 +45,21 @@ module Spaceship
             c.use(FaradayMiddleware::RelsMiddleware)
             c.use(Spaceship::StatsMiddleware)
             c.use(Spaceship::TokenRefreshMiddleware, token)
-            c.request(:retry, retry_options)
+            c.request(:retry,
+                      max: 5,
+                      retry_statuses: [429, 500, 504],
+                      retry_block: ->(env, options, retries, exc) {
+                        if [500, 504].include?(env.status)
+                          puts("Timeout received! Retrying after 3 seconds (remaining: #{retries})...") if Spaceship::Globals.verbose?
+                        end
+
+                        if @token.expired?
+                          puts("App Store Connect API token expired at #{@token.expiration}... refreshing") if Spaceship::Globals.verbose?
+                          @token.refresh!
+                          env.request_headers["Authorization"] = "Bearer #{@token.text}"
+                        end
+                      }
+                     )
             c.adapter(Faraday.default_adapter)
 
             if ENV['SPACESHIP_DEBUG']
