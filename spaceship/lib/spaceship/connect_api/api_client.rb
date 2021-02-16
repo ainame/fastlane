@@ -36,6 +36,10 @@ module Spaceship
               open_timeout:  (ENV["SPACESHIP_TIMEOUT"] || 300).to_i
             }
           }
+          retry_options = {
+            max: 5,
+            retry_statuses: [429, 500, 504],
+          }
           @token = token
           @current_team_id = current_team_id
 
@@ -45,6 +49,7 @@ module Spaceship
             c.use(FaradayMiddleware::RelsMiddleware)
             c.use(Spaceship::StatsMiddleware)
             c.use(Spaceship::TokenRefreshMiddleware, token)
+            c.request(:retry, retry_options)
             c.adapter(Faraday.default_adapter)
 
             if ENV['SPACESHIP_DEBUG']
@@ -102,80 +107,45 @@ module Spaceship
       end
 
       def get(url_or_path, params = nil)
-        response = with_asc_retry do
-          request(:get) do |req|
-            req.url(url_or_path)
-            req.options.params_encoder = Faraday::NestedParamsEncoder
-            req.params = params if params
-            req.headers['Content-Type'] = 'application/json'
-          end
+        response = request(:get) do |req|
+          req.url(url_or_path)
+          req.options.params_encoder = Faraday::NestedParamsEncoder
+          req.params = params if params
+          req.headers['Content-Type'] = 'application/json'
         end
         handle_response(response)
       end
 
       def post(url_or_path, body, tries: 5)
-        response = with_asc_retry(tries) do
-          request(:post) do |req|
-            req.url(url_or_path)
-            req.body = body.to_json
-            req.headers['Content-Type'] = 'application/json'
-          end
+        response = request(:post) do |req|
+          req.url(url_or_path)
+          req.body = body.to_json
+          req.headers['Content-Type'] = 'application/json'
         end
         handle_response(response)
       end
 
       def patch(url_or_path, body)
-        response = with_asc_retry do
-          request(:patch) do |req|
-            req.url(url_or_path)
-            req.body = body.to_json
-            req.headers['Content-Type'] = 'application/json'
-          end
+        response = request(:patch) do |req|
+          req.url(url_or_path)
+          req.body = body.to_json
+          req.headers['Content-Type'] = 'application/json'
         end
         handle_response(response)
       end
 
       def delete(url_or_path, params = nil, body = nil)
-        response = with_asc_retry do
-          request(:delete) do |req|
-            req.url(url_or_path)
-            req.options.params_encoder = Faraday::NestedParamsEncoder if params
-            req.params = params if params
-            req.body = body.to_json if body
-            req.headers['Content-Type'] = 'application/json' if body
-          end
+        response = request(:delete) do |req|
+          req.url(url_or_path)
+          req.options.params_encoder = Faraday::NestedParamsEncoder if params
+          req.params = params if params
+          req.body = body.to_json if body
+          req.headers['Content-Type'] = 'application/json' if body
         end
         handle_response(response)
       end
 
       protected
-
-      def with_asc_retry(tries = 5, &_block)
-        tries = 1 if Object.const_defined?("SpecHelper")
-
-        response = yield
-
-        status = response.status if response
-
-        if [500, 504].include?(status)
-          msg = "Timeout received! Retrying after 3 seconds (remaining: #{tries})..."
-          raise msg
-        end
-
-        return response
-      rescue UnauthorizedAccessError => error
-        # Catch unathorized access and re-raising
-        # There is no need to try again
-        raise error
-      rescue => error
-        tries -= 1
-        puts(error) if Spaceship::Globals.verbose?
-        if tries.zero?
-          return response
-        else
-          retry
-        end
-      end
 
       def handle_response(response)
         if (200...300).cover?(response.status) && (response.body.nil? || response.body.empty?)
@@ -197,10 +167,6 @@ module Spaceship
         store_csrf_tokens(response)
 
         return Spaceship::ConnectAPI::Response.new(body: response.body, status: response.status, headers: response.headers, client: self)
-      end
-
-      def handle_401(response)
-        raise UnauthorizedAccessError, handle_errors(response) if response && (response.body || {})['errors']
       end
 
       def handle_errors(response)
