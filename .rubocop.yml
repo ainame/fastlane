@@ -1,4 +1,4 @@
-inherit_from: .rubocop_todo.yml
+# inherit_from: .rubocop_todo.yml
 
 require:
   - rubocop/require_tools
@@ -329,3 +329,15 @@ Style/MethodCallWithArgsParentheses:
     - 'context'
     - 'before'
     - 'after'
+
+# Disable this for now
+Lint/RedundantCopEnableDirective:
+  Enabled: false
+Lint/RedundantCopDisableDirective:
+  Enabled: false
+
+# Disabled as this doesn't work
+Layout/RescueEnsureAlignment:
+  Enabled: false
+Layout/BeginEndAlignment:
+  Enabled: false

@@ -78,11 +78,6 @@ Layout/EmptyLinesAroundBlockBody:
 Layout/LeadingEmptyLines:
   Enabled: false
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Layout/RescueEnsureAlignment:
-  Enabled: false
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Layout/SpaceAroundMethodCallOperator:
@@ -143,11 +138,6 @@ Lint/EmptyFile:
 Lint/FloatComparison:
   Enabled: false
 
-# Offense count: 7
-# Configuration parameters: MaximumRangeSize.
-Lint/MissingCopEnableDirective:
-  Enabled: false
-
 # Offense count: 12
 Lint/MissingSuper:
   Enabled: false
@@ -160,16 +150,6 @@ Lint/NonDeterministicRequireOrder:
 # Offense count: 127
 # Cop supports --auto-correct.
 Lint/OrAssignmentToConstant:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/RedundantCopDisableDirective:
-  Enabled: false
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Lint/RedundantCopEnableDirective:
   Enabled: false
 
 # Offense count: 2
