@@ -36,7 +36,7 @@ module Spaceship
 
       def delete!(client: nil)
         client ||= Spaceship::ConnectAPI
-        client.delete!(app_clip_version_localization_id: id)
+        client.delete_app_clip_version_localization(app_clip_version_localization_id: id)
       end
     end
   end

@@ -1188,6 +1188,30 @@ module Spaceship
           tunes_request_client.get("appClipVersions/#{app_clip_version_id}/relationships/appClipAppStoreReviewDetail", params)
         end
 
+        def post_app_clip_version(app_store_version_id:, app_clip_id:, attributes: {})
+          body = {
+            data: {
+              type: "appClipVersions",
+              attributes: attributes, # invocationVerb - VIEW, OPEN, PLAY,
+              relationships: {
+                appClip: {
+                  data: {
+                    type: "appClips",
+                    id: app_clip_id
+                  }
+                },
+                releaseWithAppStoreVersion: {
+                  data: {
+                    type: "appStoreVersions",
+                    id: app_store_version_id
+                  }
+                },
+              }
+            }
+          }
+          tunes_request_client.post("appClipVersions", body)
+        end
+
         def patch_app_clip_version(app_clip_version_id:, attributes: {})
           body = {
             data: {
