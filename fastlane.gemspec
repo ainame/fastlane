@@ -23,30 +23,30 @@ Gem::Specification.new do |spec|
   spec.version       = Fastlane::VERSION
   # list of authors is regenerated and resorted on each release
   spec.authors       = ["Andrew McBurney",
-                        "Maksym Grebenets",
-                        "Iulian Onofrei",
-                        "Jimmy Dee",
-                        "Helmut Januschka",
-                        "Luka Mirosevic",
-                        "Joshua Liebowitz",
-                        "Jérôme Lacoste",
-                        "Max Ott",
-                        "Daniel Jankowski",
-                        "Manu Wallner",
-                        "Kohki Miki",
                         "Fumiya Nakamura",
-                        "Matthew Ellis",
-                        "Jan Piotrowski",
-                        "Felix Krause",
-                        "Aaron Brager",
-                        "Manish Rathi",
-                        "Olivier Halligon",
+                        "Manu Wallner",
+                        "Jimmy Dee",
                         "Satoshi Namai",
-                        "Danielle Tomlinson",
-                        "Jorge Revuelta H",
-                        "Roger Oba",
                         "Josh Holtz",
-                        "Stefan Natchev"]
+                        "Felix Krause",
+                        "Jérôme Lacoste",
+                        "Manish Rathi",
+                        "Kohki Miki",
+                        "Iulian Onofrei",
+                        "Matthew Ellis",
+                        "Aaron Brager",
+                        "Danielle Tomlinson",
+                        "Max Ott",
+                        "Roger Oba",
+                        "Olivier Halligon",
+                        "Maksym Grebenets",
+                        "Jan Piotrowski",
+                        "Jorge Revuelta H",
+                        "Luka Mirosevic",
+                        "Daniel Jankowski",
+                        "Stefan Natchev",
+                        "Helmut Januschka",
+                        "Joshua Liebowitz"]
 
   spec.email         = ["fastlane@krausefx.com"]
   spec.summary       = Fastlane::DESCRIPTION
@@ -72,7 +72,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('terminal-table', '>= 1.4.5', '< 2.0.0') # Actions documentation
   spec.add_dependency('plist', '>= 3.1.0', '< 4.0.0') # Needed for set_build_number_repository and get_info_plist_value actions
   spec.add_dependency('CFPropertyList', '>= 2.3', '< 4.0.0') # Needed to be able to read binary plist format
-  spec.add_dependency('addressable', '>= 2.3', '< 3.0.0') # Support for URI templates
+  spec.add_dependency('addressable', '>= 2.8', '< 3.0.0') # Support for URI templates
   spec.add_dependency('multipart-post', '~> 2.0.0') # Needed for uploading builds to appetize
   spec.add_dependency('word_wrap', '~> 1.0.0') # to add line breaks for tables with long strings
 
@@ -102,7 +102,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('simctl', '~> 1.6.3') # Used for querying and interacting with iOS simulators
   spec.add_dependency('jwt', '>= 2.1.0', '< 3') # Used for generating authentication tokens for App Store Connect API
   spec.add_dependency('google-apis-playcustomapp_v1', '~> 0.1') # Google API Client to access Custom app Publishing API
-  spec.add_dependency('google-apis-androidpublisher_v3', '~> 0.1') # Google API Client to access Play Publishing API
+  spec.add_dependency('google-apis-androidpublisher_v3', '~> 0.3') # Google API Client to access Play Publishing API
   spec.add_dependency('google-cloud-storage', '~> 1.31') # Access Google Cloud Storage for match
   spec.add_dependency('emoji_regex', '>= 0.1', '< 4.0') # Used to scan for Emoji in the changelog
   spec.add_dependency('aws-sdk-s3', '~> 1.0') # Used for S3 storage in fastlane match

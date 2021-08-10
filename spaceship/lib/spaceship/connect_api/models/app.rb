@@ -424,6 +424,13 @@ module Spaceship
         end
       end
 
+      def remove_users(client: nil, user_ids: nil)
+        client ||= Spaceship::ConnectAPI
+        user_ids.each do |user_id|
+          client.delete_user_visible_apps(user_id: user_id, app_ids: [id])
+        end
+      end
+
       #
       # App Clips
       #

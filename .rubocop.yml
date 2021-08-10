@@ -299,8 +299,10 @@ Lint/IsStringUsage:
   Include:
     - 'cert/**/*'
     - 'deliver/**/*'
+    - 'fastlane/**/*'
     - 'gym/**/*'
     - 'match/**/*'
+    - 'precheck/**/*'
     - 'screengrab/**/*'
     - 'supply/**/*'
 
